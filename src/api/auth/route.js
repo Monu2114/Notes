@@ -1,11 +1,21 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
-const bcrypt = require("bcryptjs");
-app.use(express.json());
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
+import * as dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import path from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+import "dotenv/config";
+
+import express from "express";
+
+import bcrypt from "bcryptjs";
+
+import mongoose from "mongoose";
+
+import jwt from "jsonwebtoken";
 console.log("Connecting to MongoDB with URI:", process.env.MONGO_URI);
 
 //mongodb connection
@@ -21,10 +31,14 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
+const app = express();
+app.use(express.json());
+
 //sign in
 app.post("/signup", async (req, res) => {
   const { username, password } = req.body;
   const hashedpassword = await bcrypt.hash(password, 10);
+  console.log(hashedpassword);
   const user = new User({ username, hashedpassword });
   await user.save();
   res.json({ message: "User Created successfully" });
@@ -32,16 +46,39 @@ app.post("/signup", async (req, res) => {
 
 //login
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (!user) return res.status(400).json({ error: "User not found" });
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ error: "Invalid password" });
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
-  });
+  try {
+    const { username, password } = req.body;
 
-  res.json({ token });
+    console.log("Received username:", username); // Log incoming data
+    console.log("Received password:", password);
+
+    const user = await User.findOne({ username });
+    console.log("Fetched user from DB:", user); // Debugging
+
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    console.log("Stored Hashed Password:", user.password); // Check if it's undefined
+
+    if (!user.password) {
+      return res
+        .status(500)
+        .json({ error: "User password is missing in the database" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ error: "Invalid password" });
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.json({ token });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 const verifyToken = (req, res, next) => {
