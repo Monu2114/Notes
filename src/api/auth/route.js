@@ -36,12 +36,26 @@ app.use(express.json());
 
 //sign in
 app.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
-  const hashedpassword = await bcrypt.hash(password, 10);
-  console.log(hashedpassword);
-  const user = new User({ username, hashedpassword });
-  await user.save();
-  res.json({ message: "User Created successfully" });
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+
+    if (user) {
+      return res
+        .status(400)
+        .json({ error: "User already exists, please login" });
+    }
+
+    const hashedpassword = await bcrypt.hash(password, 10);
+    console.log(hashedpassword);
+    const userNew = new User({ username, password: hashedpassword });
+    await userNew.save();
+
+    return res.json({ message: "User Created successfully" });
+  } catch (error) {
+    console.error("Signup error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 //login
