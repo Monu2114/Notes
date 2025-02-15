@@ -2,6 +2,11 @@ import * as dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import path from "path";
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import connectDB from "../../config/db.js";
+import User from "../../models/User.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -9,30 +14,11 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 import "dotenv/config";
 
-import express from "express";
-
-import bcrypt from "bcryptjs";
-
-import mongoose from "mongoose";
-
-import jwt from "jsonwebtoken";
-console.log("Connecting to MongoDB with URI:", process.env.MONGO_URI);
-
-//mongodb connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const UserSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-});
-
-const User = mongoose.model("User", UserSchema);
-
 const app = express();
 app.use(express.json());
+
+// Connect to MongoDB
+connectDB();
 
 //sign in
 app.post("/signup", async (req, res) => {
