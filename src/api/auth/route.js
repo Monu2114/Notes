@@ -2,11 +2,12 @@ import * as dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import path from "path";
-import express from "express";
+import express, { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import connectDB from "../../config/db.js";
 import User from "../../models/User.js";
+import verifyToken from "../../middleware/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,14 +15,14 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 import "dotenv/config";
 
-const app = express();
-app.use(express.json());
+const router = express.Router();
+// router.use(express.json());
 
 // Connect to MongoDB
 connectDB();
 
 //sign in
-app.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -45,7 +46,7 @@ app.post("/signup", async (req, res) => {
 });
 
 //login
-app.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -81,22 +82,10 @@ app.post("/login", async (req, res) => {
   }
 });
 
-const verifyToken = (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token) return res.status(403).json({ error: "Access denied" });
-
-  try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
-    next();
-  } catch (err) {
-    res.status(400).json({ error: "Invalid token" });
-  }
-};
-
-app.get("/protected", verifyToken, (req, res) => {
+router.get("/protected", verifyToken, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+export default router;
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
