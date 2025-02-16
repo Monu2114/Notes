@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, FileText } from "lucide-react";
 import { Button } from "./ui/button";
-const NoteCard = ({ type, title, content, timestamp, duration, image }) => {
+const NoteCard = ({ type, title, content, timestamp, duration }) => {
   return (
     <Card className="w-64 p-4 border shadow-sm h-60">
       <div className="text-gray-500 text-sm flex gap-10">
@@ -25,38 +25,10 @@ const NoteCard = ({ type, title, content, timestamp, duration, image }) => {
             <span className="text-xs text-gray-500">{duration}</span>
           </div>
         )}
-        {image && <div className="mt-2 text-blue-500 text-sm">📷 {image}</div>}
+        {/* {image && <div className="mt-2 text-blue-500 text-sm">📷 {image}</div>} */}
       </CardContent>
     </Card>
   );
 };
 
-const NotesList = () => {
-  const notes = [
-    {
-      type: "audio",
-      title: "Engineering Assignment Audio",
-      content:
-        "I'm recording an audio to transcribe into text for the assignment of engineering.",
-      timestamp: "Jan 30, 2025 • 5:26 PM",
-      duration: "00:09",
-      image: "1 Image",
-    },
-    {
-      type: "text",
-      title: "Random Sequence",
-      content: "ssxscscscsc",
-      timestamp: "Jan 30, 2025 • 5:21 PM",
-    },
-  ];
-
-  return (
-    <div className="flex gap-4 p-4">
-      {notes.map((note, index) => (
-        <NoteCard key={index} {...note} />
-      ))}
-    </div>
-  );
-};
-
-export default NotesList;
+export default NoteCard;
