@@ -35,6 +35,28 @@ router.get("/favourite", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+router.post("/save-transcription", verifyToken, async (req, res) => {
+  try {
+    const { transcribedText } = req.body;
+    const userId = req.user._id;
+
+    if (!transcribedText) {
+      return res.status(400).json({ error: "No text received" });
+    }
+
+    const newNote = new Notes({
+      userId,
+      title: "Voice Note",
+      content: transcribedText,
+    });
+
+    await newNote.save();
+    res.json({ message: "Note saved successfully", note: newNote });
+  } catch (error) {
+    console.error("Error saving transcription:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 router.delete("/notes/:id", verifyToken, async (req, res) => {
   try {
     const noteId = req.params.id;
