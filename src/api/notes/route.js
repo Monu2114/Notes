@@ -5,9 +5,9 @@ import verifyToken from "../../middleware/auth.js";
 const router = express.Router();
 router.post("/create", verifyToken, async (req, res) => {
   try {
-    const { title, content, audioUrl } = req.body;
+    const { title, content, audioUrl, favourite } = req.body;
     const userId = req.user._id;
-    const newNote = new Notes({ userId, title, content, audioUrl });
+    const newNote = new Notes({ userId, title, content, audioUrl, favourite });
     await newNote.save();
 
     res.redirect("/notes");
@@ -19,6 +19,16 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const data = await Notes.find({ userId });
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching notes:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+router.get("/favourite", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const data = await Notes.find({ userId, favourite: true });
     res.json(data);
   } catch (error) {
     console.error("Error fetching notes:", error);
