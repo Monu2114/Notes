@@ -4,6 +4,7 @@ import { useState } from "react";
 export default function Login({ setToken, fetchNotes }) {
   const [username, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); // For displaying errors
 
   const fetchData = async (token) => {
     try {
@@ -18,7 +19,7 @@ export default function Login({ setToken, fetchNotes }) {
       fetchNotes(data);
       console.log(data);
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
   const handleLogin = async (e) => {
@@ -36,16 +37,18 @@ export default function Login({ setToken, fetchNotes }) {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem("token", data.token);
-        const token = data.token;
-        setToken(token);
-        fetchData(token);
+        localStorage.setItem("username", username);
+        setToken(data.token);
+        setName(username);
+        fetchData(data.token);
 
         // Fetch notes immediately after login
       } else {
-        console.error("Login failed:", data.error);
+        setError(data.error);
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      setError(error);
+      // console.error("Error logging in:", error);
     }
   };
 
@@ -64,6 +67,7 @@ export default function Login({ setToken, fetchNotes }) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button type="submit">Login</button>
+      {error && <p className="text-red-500">{error}</p>}
     </form>
   );
 }
