@@ -52,6 +52,7 @@ router.post("/save-transcription", verifyToken, async (req, res) => {
 
     await newNote.save();
     res.json({ message: "Note saved successfully", note: newNote });
+    // res.redirect("/notes");
   } catch (error) {
     console.error("Error saving transcription:", error);
     res.status(500).json({ error: "Internal Server Error" });

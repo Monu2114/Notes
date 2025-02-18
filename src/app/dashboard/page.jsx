@@ -11,7 +11,20 @@ export default function Dashboard() {
   const [username, setUsername] = useState("");
   const [isMounted, setMount] = useState(false);
   const router = useRouter();
+  const fetchNotes = async (token) => {
+    try {
+      const res = await fetch("http://localhost:5000/notes", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
+      const data = await res.json();
+      if (res.ok) setNotes(data);
+      else console.error("Failed to fetch notes:", data.error);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
   useEffect(() => {
     setMount(true);
     if (typeof window !== "undefined") {
@@ -28,20 +41,6 @@ export default function Dashboard() {
     }
   }, [router]);
 
-  const fetchNotes = async (token) => {
-    try {
-      const res = await fetch("http://localhost:5000/notes", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await res.json();
-      if (res.ok) setNotes(data);
-      else console.error("Failed to fetch notes:", data.error);
-    } catch (error) {
-      console.error("Error fetching notes:", error);
-    }
-  };
   if (!isMounted) {
     return null; // Optionally, you could render a loading spinner here
   }

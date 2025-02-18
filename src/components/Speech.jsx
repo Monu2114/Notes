@@ -1,11 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-
+import { useRouter } from "next/navigation";
 export default function Speech({ token, setTranscription }) {
+  const router = useRouter();
+
   const [record, setRecord] = useState("Start");
   const [recognition, setRecognition] = useState(null);
-
+  const [transcript, setTranscript] = useState(""); // State to store the transcription
+  const [error, setError] = useState("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const SpeechRecognition =
@@ -27,21 +30,28 @@ export default function Speech({ token, setTranscription }) {
 
     // Transcribing the speech
     const handleResult = (event) => {
-      let transcript = "";
+      let newTranscript = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript;
+        newTranscript += event.results[i][0].transcript;
+        setTranscription(newTranscript);
       }
-      setTranscription(transcript);
-      console.log("Transcribed Text: ", transcript);
+      setTranscript(newTranscript); // Update transcript state
+      console.log("Transcribed Text: ", newTranscript);
+    };
+
+    const handleEnd = () => {
+      // Send to the backend only when the recognition ends
       sendToBackend(transcript);
     };
 
     recognition.addEventListener("result", handleResult);
+    recognition.addEventListener("end", handleEnd);
 
     return () => {
       recognition.removeEventListener("result", handleResult);
+      recognition.removeEventListener("end", handleEnd);
     };
-  }, [recognition]);
+  }, [recognition, transcript]);
 
   function recordSet() {
     if (!recognition) return;
@@ -55,6 +65,11 @@ export default function Speech({ token, setTranscription }) {
   }
 
   async function sendToBackend(transcript) {
+    if (!transcript) {
+      setError("Record something");
+      console.error("No text received");
+      return;
+    }
     try {
       const res = await fetch(
         "http://localhost:5000/notes/save-transcription",
@@ -64,18 +79,34 @@ export default function Speech({ token, setTranscription }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ text: transcript }),
+          body: JSON.stringify({ transcribedText: transcript }),
         }
       );
+
+      if (!res.ok) {
+        setError("Record something");
+
+        console.error("Failed to send to backend. Status:", res.status);
+        return;
+      }
+
       const data = await res.json();
-      console.log(data);
+      console.log("Backend response:", data);
+      router.push("/dashboard");
     } catch (error) {
+      setError("Record something");
+
       console.error("Error sending data to backend:", error);
     }
   }
 
   return (
     <div>
+      {error && (
+        <div className="mt-4 p-2 text-red-600 bg-red-100 rounded">
+          <strong>Error:</strong> {error}
+        </div>
+      )}
       <Button
         variant="destructive"
         className="h-6 p-2 w-24 rounded-2xl"
