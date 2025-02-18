@@ -9,9 +9,11 @@ import Note from "@/components/note";
 export default function Dashboard() {
   const [notes, setNotes] = useState([]);
   const [username, setUsername] = useState("");
+  const [isMounted, setMount] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setMount(true);
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
       const storedUsername = localStorage.getItem("username");
@@ -40,6 +42,9 @@ export default function Dashboard() {
       console.error("Error fetching notes:", error);
     }
   };
+  if (!isMounted) {
+    return null; // Optionally, you could render a loading spinner here
+  }
 
   return (
     <div className="ml-4 flex mt-4 h-screen w-screen gap-2">
