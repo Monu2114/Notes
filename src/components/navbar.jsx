@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
-export default function navbar() {
+export default function navbar({ username }) {
   return (
     <div className="h-5/6 w-1/4 rounded-xl border-gray-300 border">
       <div className="flex flex-col gap-64 ml-2">
@@ -32,7 +32,7 @@ export default function navbar() {
             <Image src="/note.png" height={80} width={20} alt="Notes" />
           </div>
 
-          <p>Emannuella</p>
+          <p>{username}</p>
         </div>
       </div>
     </div>
