@@ -19,6 +19,7 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const data = await Notes.find({ userId });
+    console.log(data);
     res.json(data);
   } catch (error) {
     console.error("Error fetching notes:", error);

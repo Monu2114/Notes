@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Textbar from "@/components/textbar";
 import Search from "@/components/search";
-import Note from "@/components/note";
+import Notes from "@/components/Notes";
 
 export default function Dashboard() {
   const [notes, setNotes] = useState([]);
@@ -48,21 +48,10 @@ export default function Dashboard() {
   return (
     <div className="ml-4 flex mt-4 h-screen w-screen gap-2">
       <Navbar username={username} />
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-10">
         <Search />
         <div className="flex flex-wrap gap-4">
-          {notes.length > 0 ? (
-            notes.map((note) => (
-              <Note
-                key={note._id}
-                title={note.title}
-                content={note.content}
-                timestamp={note.timestamp}
-              />
-            ))
-          ) : (
-            <p>No notes found.</p>
-          )}
+          <Notes notes={notes} />
         </div>
         <Textbar token={localStorage.getItem("token")} />
       </div>

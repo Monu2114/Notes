@@ -1,32 +1,48 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, FileText } from "lucide-react";
-import { Button } from "./ui/button";
-const NoteCard = ({ type, title, content, timestamp, duration }) => {
+import { MoreHorizontal, Copy } from "lucide-react";
+
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+const NoteCard = ({ title, content, timestamp }) => {
+  const formattedDate = formatDate(timestamp);
+
   return (
-    <Card className="w-64 p-4 border shadow-sm h-60">
-      <div className="text-gray-500 text-sm flex gap-10">
-        <div>{timestamp}</div>
-        <Button className="bg-slate-400 h-8">
-          {type === "audio" ? duration : "Text"}
-        </Button>
-      </div>
-      <div className="flex items-center gap-2 mt-2">
-        {type === "audio" ? (
-          <Play className="text-gray-700" />
-        ) : (
-          <FileText className="text-gray-700" />
-        )}
-        <h3 className="text-sm font-semibold">{title}</h3>
-      </div>
-      <CardContent className="mt-2 text-sm text-gray-700">
-        {content}
-        {type === "audio" && (
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs text-gray-500">{duration}</span>
+    <Card className="w-64 h-32 p-4 border shadow-sm bg-white hover:shadow-md transition-shadow">
+      <div className="flex justify-between items-start">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400">{formattedDate}</span>
           </div>
-        )}
-        {/* {image && <div className="mt-2 text-blue-500 text-sm">📷 {image}</div>} */}
+          <h3 className="text-sm font-medium mt-2 text-gray-700 line-clamp-1">
+            {title}
+          </h3>
+        </div>
+      </div>
+      <CardContent className="p-0 mt-2">
+        <p className="text-sm text-gray-500 line-clamp-2">{content}</p>
       </CardContent>
+      <div className="flex justify-end gap-1">
+        <button className="text-gray-400 hover:text-gray-600">
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
+
+        <button
+          className="text-gray-400 hover:text-gray-600 p-1 rounded hover:bg-gray-100"
+          title="Copy note"
+        >
+          <Copy className="w-4 h-4" />
+        </button>
+      </div>
     </Card>
   );
 };
