@@ -12,17 +12,19 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUsername = localStorage.getItem("username");
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      const storedUsername = localStorage.getItem("username");
 
-    if (!storedToken || !storedUsername) {
-      router.push("/login"); // Redirect if not logged in
-      return;
+      if (!storedToken || !storedUsername) {
+        router.push("/login"); // Redirect if not logged in
+        return;
+      }
+
+      setUsername(storedUsername);
+      fetchNotes(storedToken);
     }
-
-    setUsername(storedUsername);
-    fetchNotes(storedToken);
-  }, []);
+  }, [router]);
 
   const fetchNotes = async (token) => {
     try {
