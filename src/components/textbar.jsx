@@ -8,7 +8,7 @@ export default function Textbar({ token }) {
   const [transcript, setTranscription] = useState("");
 
   return (
-    <div className="rounded-2xl p-2 w-full h-8 flex justify-between border ml-20">
+    <div className="rounded-2xl p-2 w-2/3 h-8 flex justify-between border ml-20">
       <div className="flex items-center gap-1">
         <div className="bg-gray-100 p-2 rounded-full h-6">
           <FontAwesomeIcon
