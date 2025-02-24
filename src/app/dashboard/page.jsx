@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [isMounted, setMount] = useState(false);
   const router = useRouter();
   const fetchNotes = async (token) => {
+    if (!token || token == "Invalid Token.") router.push("/login");
     try {
       const res = await fetch("http://localhost:5000/notes", {
         method: "GET",
@@ -20,7 +21,10 @@ export default function Dashboard() {
 
       const data = await res.json();
       if (res.ok) setNotes(data);
-      else console.error("Failed to fetch notes:", data.error);
+      else {
+        console.error("Failed to fetch notes:", data.error);
+        router.push("/login");
+      }
     } catch (error) {
       console.error("Error fetching notes:", error);
     }
@@ -30,8 +34,8 @@ export default function Dashboard() {
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
       const storedUsername = localStorage.getItem("username");
-
-      if (!storedToken || !storedUsername) {
+      console.log("Token from storage:", storedToken);
+      if (!storedToken || !storedUsername || storedToken == "Invalid token.") {
         router.push("/login"); // Redirect if not logged in
         return;
       }

@@ -2,14 +2,18 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 const verifyToken = async (req, res, next) => {
-  const authHeader = req.header("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer"))
-    return res.status(403).json({ error: "Access denied. No token provided." });
+  const authHeader =
+    req.headers["authorization"] || req.headers["x-access-token"];
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Access denied. No token provided." });
+  }
+
   const token = authHeader.split(" ")[1];
+
   try {
-    //decoded contains user_id (Mongodb document)
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId); // Fetch user from DB
+    const user = await User.findById(decoded.userId).select("-password"); // Exclude password from user object
 
     if (!user) {
       return res.status(404).json({ error: "User not found." });
@@ -18,7 +22,14 @@ const verifyToken = async (req, res, next) => {
     req.user = user; // Attach user object to request
     next();
   } catch (err) {
-    res.status(400).json({ error: "Invalid token." });
+    if (err.name === "TokenExpiredError") {
+      return res
+        .status(401)
+        .json({ error: "Token expired. Please login again." });
+    } else if (err.name === "JsonWebTokenError") {
+      return res.status(401).json({ error: "Invalid token." });
+    }
+    return res.status(500).json({ error: "Internal Server Error." });
   }
 };
 

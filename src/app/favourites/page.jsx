@@ -29,7 +29,7 @@ export default function Favourites() {
       const storedToken = localStorage.getItem("token");
       const storedUsername = localStorage.getItem("username");
 
-      if (!storedToken || !storedUsername) {
+      if (storedToken == "Invalid Token" || !storedUsername) {
         router.push("/login"); // Redirect if not logged in
         return;
       }
