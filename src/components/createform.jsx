@@ -61,13 +61,15 @@ const CreateForm = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <label htmlFor="fav">Favourite</label>
-        <input
-          id="fav"
-          type="checkbox"
-          checked={setFav(true)}
-          onChange={(e) => setFav(e.target.checked)} // ✅ Fixed checkbox state
-        />
+        <label htmlFor="fav">
+          <input
+            id="fav"
+            type="checkbox"
+            checked={favourite}
+            onChange={(e) => setFav(e.target.checked)} // ✅ Fixed checkbox state
+          />
+          Favourite
+        </label>
         <button type="submit">Save</button>
       </form>
     </div>
