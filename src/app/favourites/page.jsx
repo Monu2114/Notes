@@ -2,12 +2,15 @@
 import Navbar from "@/components/navbar";
 import { useEffect, useState } from "react";
 import Notes from "@/components/Notes";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // Import Context
+
 export default function Favourites() {
   const [favourite, setFavourite] = useState([]);
-  const [token, setToken] = useState("");
-  const [isMounted, setMount] = useState(false);
+  const { token, username } = useAuth(); // ✅ Get token and username from Context
+  const router = useRouter();
 
-  const fetchNotes = async (token) => {
+  const fetchNotes = async () => {
     try {
       const res = await fetch("http://localhost:5000/notes/favourite", {
         method: "GET",
@@ -22,25 +25,17 @@ export default function Favourites() {
       console.error("Error fetching notes:", error);
     }
   };
-  if (!isMounted) return false;
-  useEffect(() => {
-    if (!isMounted) return;
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token");
-      const storedUsername = localStorage.getItem("username");
 
-      if (storedToken == "Invalid Token" || !storedUsername) {
-        router.push("/login"); // Redirect if not logged in
-        return;
-      }
-      setToken(storedToken);
-      fetchNotes(storedToken);
-    }
-  }, []);
+  useEffect(() => {
+    if (!token) return; // Ensure token exists before fetching
+    fetchNotes();
+  }, [token]); // Re-fetch if token changes
+
   return (
     <div>
-      {" "}
       <Navbar />
+      <h1 className="text-xl font-bold">Welcome, {username}!</h1>{" "}
+      {/* ✅ Display username */}
       {favourite && <Notes notes={favourite} />}
     </div>
   );

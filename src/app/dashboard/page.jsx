@@ -5,11 +5,12 @@ import Navbar from "@/components/navbar";
 import Textbar from "@/components/textbar";
 import Search from "@/components/search";
 import Notes from "@/components/Notes";
-
+import { useAuth } from "@/context/AuthContext";
 export default function Dashboard() {
   const [notes, setNotes] = useState([]);
-  const [username, setUsername] = useState("");
-  const [isMounted, setMount] = useState(false);
+  // const [username, setUsername] = useState("");
+  // const [isMounted, setMount] = useState(false);
+  const { username, token } = useAuth();
   const router = useRouter();
   const fetchNotes = async (token) => {
     if (!token || token == "Invalid Token.") router.push("/login");
@@ -30,24 +31,25 @@ export default function Dashboard() {
     }
   };
   useEffect(() => {
-    setMount(true);
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token");
-      const storedUsername = localStorage.getItem("username");
-      console.log("Token from storage:", storedToken);
-      if (!storedToken || !storedUsername || storedToken == "Invalid token.") {
-        router.push("/login"); // Redirect if not logged in
-        return;
-      }
+    // setMount(true);
+    // if (typeof window !== "undefined") {
+    //   const storedToken = localStorage.getItem("token");
+    //   const storedUsername = localStorage.getItem("username");
+    //   console.log("Token from storage:", storedToken);
+    //   if (!storedToken || !storedUsername || storedToken == "Invalid token.") {
+    //     router.push("/login"); // Redirect if not logged in
+    //     return;
+    //   }
 
-      setUsername(storedUsername);
-      fetchNotes(storedToken);
-    }
+    //   setUsername(storedUsername);
+    //
+    // }
+    fetchNotes(token);
   }, [router]);
 
-  if (!isMounted) {
-    return null; // Optionally, you could render a loading spinner here
-  }
+  // if (!isMounted) {
+  //   return null; // Optionally, you could render a loading spinner here
+  // }
 
   return (
     <div className="ml-4 flex mt-4 h-screen w-screen gap-2">
