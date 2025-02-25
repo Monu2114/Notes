@@ -59,7 +59,7 @@ export default function Dashboard() {
         <div className="flex flex-wrap gap-4">
           <Notes notes={notes} />
         </div>
-        <Textbar token={localStorage.getItem("token")} />
+        <Textbar token={token} />
       </div>
     </div>
   );
