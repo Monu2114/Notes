@@ -20,7 +20,10 @@ export default function Favourites() {
       const data = await res.json();
       console.log(data);
       if (res.ok) setFavourite(data);
-      else console.error("Failed to fetch notes:", data.error);
+      else {
+        router.push("/login");
+        // console.error("Failed to fetch notes:", data.error);
+      }
     } catch (error) {
       console.error("Error fetching notes:", error);
     }

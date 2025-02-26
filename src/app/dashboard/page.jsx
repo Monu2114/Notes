@@ -13,7 +13,6 @@ export default function Dashboard() {
   const { username, token } = useAuth();
   const router = useRouter();
   const fetchNotes = async (token) => {
-    if (!token || token == "Invalid Token.") router.push("/login");
     try {
       const res = await fetch("http://localhost:5000/notes", {
         method: "GET",
@@ -44,6 +43,7 @@ export default function Dashboard() {
     //   setUsername(storedUsername);
     //
     // }
+    if (!token || token == "Invalid Token.") router.push("/login");
     fetchNotes(token);
   }, [router]);
 

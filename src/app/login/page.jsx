@@ -1,15 +1,22 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
+  const { setToken } = useAuth(); // Make sure to have this
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!username || !password) {
+      setError("Username and password are required");
+      return;
+    }
     try {
       const res = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
@@ -19,8 +26,7 @@ export default function Login() {
 
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", username);
+        setToken(data.token); // Save token to context
         router.push("/dashboard"); // Redirect to dashboard after login
       } else {
         setError(data.error || "Invalid credentials");
@@ -29,8 +35,13 @@ export default function Login() {
       setError("Login failed. Try again.");
     }
   };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (!username || !password) {
+      setError("Username and password are required");
+      return;
+    }
     try {
       const res = await fetch("http://localhost:5000/auth/signup", {
         method: "POST",
@@ -49,6 +60,7 @@ export default function Login() {
       setError("Sign-up failed. Try again");
     }
   };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-4">
