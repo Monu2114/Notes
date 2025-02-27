@@ -53,13 +53,13 @@ export default function Dashboard() {
 
   return (
     <div className="ml-4 flex mt-4 h-screen w-screen gap-2">
-      <Navbar username={username} />
+      <Navbar />
       <div className="flex flex-col gap-10">
         <Search />
         <div className="flex flex-wrap gap-4">
           <Notes notes={notes} />
         </div>
-        <Textbar token={token} />
+        <Textbar />
       </div>
     </div>
   );

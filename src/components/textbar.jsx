@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faPen } from "@fortawesome/free-solid-svg-icons";
 import Speech from "./Speech";
 import CreateForm from "./createform";
-export default function Textbar({ token }) {
+
+export default function Textbar() {
   const [transcript, setTranscription] = useState("");
   const [showForm, setShowForm] = useState(false);
   return (
@@ -28,7 +29,7 @@ export default function Textbar({ token }) {
         <div>{transcript}</div>
       </div>
       <div className="text-xs">
-        <Speech token={token} setTranscription={setTranscription} />
+        <Speech setTranscription={setTranscription} />
       </div>
       {showForm && (
         <div className="absolute top-20 left-1/3 bg-white p-4 rounded-lg shadow-lg">

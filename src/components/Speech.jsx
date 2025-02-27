@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-export default function Speech({ token, setTranscription }) {
-  const router = useRouter();
+import { useAuth } from "@/context/AuthContext";
 
+export default function Speech({ setTranscription }) {
+  const router = useRouter();
+  const { token } = useAuth();
   const [record, setRecord] = useState("Start");
   const [recognition, setRecognition] = useState(null);
   const [transcript, setTranscript] = useState(""); // State to store the transcription
