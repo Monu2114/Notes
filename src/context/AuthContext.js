@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem("token");
       const storedUsername = localStorage.getItem("username");
 
-      if (!storedToken || storedToken === "Invalid Token" || !storedUsername) {
+      if (!storedToken || storedToken === "Invalid Token") {
         router.push("/login"); // Redirect to login if not authenticated
         return;
       }
@@ -26,7 +26,10 @@ export const AuthProvider = ({ children }) => {
       setUsername(storedUsername);
     }
   }, []);
-
+  //   useEffect(() => {
+  //     console.log(token);
+  //     console.log(username);
+  //   }, [token, username]);
   return (
     <AuthContext.Provider value={{ username, setUsername, token, setToken }}>
       {children}

@@ -10,7 +10,7 @@ export default function Dashboard() {
   const [notes, setNotes] = useState([]);
   // const [username, setUsername] = useState("");
   // const [isMounted, setMount] = useState(false);
-  const { username, token } = useAuth();
+  const { token } = useAuth();
   const router = useRouter();
   const fetchNotes = async (token) => {
     try {
@@ -45,7 +45,7 @@ export default function Dashboard() {
     // }
     if (!token || token == "Invalid Token.") router.push("/login");
     fetchNotes(token);
-  }, [router]);
+  }, []);
 
   // if (!isMounted) {
   //   return null; // Optionally, you could render a loading spinner here

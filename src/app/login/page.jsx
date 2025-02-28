@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [username, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
-  const { setToken } = useAuth(); // Make sure to have this
+  const { setToken, setUsername } = useAuth(); // Make sure to have this
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,7 +26,11 @@ export default function Login() {
 
       const data = await res.json();
       if (res.ok) {
-        setToken(data.token); // Save token to context
+        setToken(data.token);
+        console.log("Hi");
+        setUsername(username);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", username); // Save token to context
         router.push("/dashboard"); // Redirect to dashboard after login
       } else {
         setError(data.error || "Invalid credentials");
@@ -75,7 +79,7 @@ export default function Login() {
           placeholder="Username"
           className="border p-2 rounded"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUser(e.target.value)}
         />
         <input
           type="password"
