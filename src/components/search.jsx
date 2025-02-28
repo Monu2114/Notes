@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { ArrowLeftRight } from "lucide-react";
 export default function Search() {
   return (
     <div className="flex gap-1 ml-3">
@@ -18,7 +19,7 @@ export default function Search() {
       </div>
 
       <Button variant="outline" className="h-8 rounded-xl">
-        <Image src="/note.png" width={10} height={10} alt="sort" />
+        <ArrowLeftRight className="w-5 h-5" />
         Sort
       </Button>
     </div>
