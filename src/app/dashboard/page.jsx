@@ -10,7 +10,6 @@ export default function Dashboard() {
   const [notes, setNotes] = useState([]);
   // const [username, setUsername] = useState("");
   // const [isMounted, setMount] = useState(false);
-  const { token } = useAuth();
   const router = useRouter();
   const fetchNotes = async (token) => {
     try {
@@ -30,21 +29,18 @@ export default function Dashboard() {
     }
   };
   useEffect(() => {
-    // setMount(true);
     // if (typeof window !== "undefined") {
-    //   const storedToken = localStorage.getItem("token");
-    //   const storedUsername = localStorage.getItem("username");
-    //   console.log("Token from storage:", storedToken);
-    //   if (!storedToken || !storedUsername || storedToken == "Invalid token.") {
-    //     router.push("/login"); // Redirect if not logged in
-    //     return;
-    //   }
+    const storedToken = localStorage.getItem("token");
 
-    //   setUsername(storedUsername);
-    //
-    // }
-    if (!token || token == "Invalid Token.") router.push("/login");
-    fetchNotes(token);
+    console.log("Token from storage:", storedToken);
+
+    if (!storedToken || storedToken === "Invalid Token.") {
+      router.push("/login");
+      return;
+    }
+
+    fetchNotes(storedToken); // Use stored token directly
+    //}
   }, []);
 
   // if (!isMounted) {
