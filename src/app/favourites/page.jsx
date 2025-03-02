@@ -35,10 +35,8 @@ export default function Favourites() {
   }, [token]); // Re-fetch if token changes
 
   return (
-    <div>
+    <div className="flex mt-4 gap-20">
       <Navbar />
-      <h1 className="text-xl font-bold">Welcome, {username}!</h1>{" "}
-      {/* ✅ Display username */}
       {favourite && <Notes notes={favourite} />}
     </div>
   );

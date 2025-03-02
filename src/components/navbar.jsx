@@ -25,10 +25,10 @@ export default function Navbar() {
             <p className="text-sm">Home</p>
           </div>
           <div
-            className="flex gap-2 ml-2 mt-2 p-1"
+            className="flex gap-2 ml-2 mt-2 p-1 hover:bg-purple-400 hover:rounded-xl"
             onClick={() => router.push("/favourites")}
           >
-            <FontAwesomeIcon icon={faStar} className="text-black-500 w-4" />
+            <FontAwesomeIcon icon={faStar} className="text-black-500 w-4 " />
             <p className="text-sm">Favourites</p>
           </div>
         </div>
