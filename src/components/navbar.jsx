@@ -14,7 +14,7 @@ export default function Navbar() {
       <div className="flex flex-col gap-56 ml-2">
         <div className="flex flex-col gap-2">
           <div className="flex gap-2 mt-2 p-1 border-b">
-            <Image src="/notes.png" height={80} width={20} alt="Notes" />
+            <Image src="/note.png" height={80} width={20} alt="Notes" />
             <div>NoteBox</div>
           </div>
           <div
