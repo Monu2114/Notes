@@ -4,8 +4,10 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext"; // Import Auth Context
-
+import { usePathname } from "next/navigation";
+import path from "path";
 export default function Navbar() {
+  const pathname = usePathname();
   const router = useRouter();
   const { username } = useAuth(); // Get username from context
 
@@ -25,10 +27,17 @@ export default function Navbar() {
             <p className="text-sm">Home</p>
           </div>
           <div
-            className="flex gap-2 ml-2 mt-2 p-1 hover:bg-purple-400 hover:rounded-xl"
+            className="flex gap-2 ml-2 mt-2 p-1 hover:bg-purple-400 hover:rounded-xl "
             onClick={() => router.push("/favourites")}
           >
-            <FontAwesomeIcon icon={faStar} className="text-black-500 w-4 " />
+            <FontAwesomeIcon
+              icon={faStar}
+              className={`w-4 ${
+                pathname === "/favourites"
+                  ? "text-purple-400"
+                  : "text-black-500"
+              }`}
+            />
             <p className="text-sm">Favourites</p>
           </div>
         </div>
