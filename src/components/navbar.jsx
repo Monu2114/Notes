@@ -27,17 +27,12 @@ export default function Navbar() {
             <p className="text-sm">Home</p>
           </div>
           <div
-            className="flex gap-2 ml-2 mt-2 p-1 hover:bg-purple-400 hover:rounded-xl "
+            className={`flex gap-2 ml-2 mt-2 p-1 hover:bg-purple-400 hover:rounded-xl ${
+              pathname === "/favourites" ? "bg-purple-400 rounded-xl" : ""
+            }`}
             onClick={() => router.push("/favourites")}
           >
-            <FontAwesomeIcon
-              icon={faStar}
-              className={`w-4 ${
-                pathname === "/favourites"
-                  ? "text-purple-400"
-                  : "text-black-500"
-              }`}
-            />
+            <FontAwesomeIcon icon={faStar} className={`w-4`} />
             <p className="text-sm">Favourites</p>
           </div>
         </div>
