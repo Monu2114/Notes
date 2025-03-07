@@ -28,7 +28,7 @@ export default function Navbar() {
           </div>
           <div
             className={`flex gap-2 ml-2 mt-2 p-1 hover:bg-purple-400 hover:rounded-xl ${
-              pathname === "/favourites" ? "bg-purple-400 rounded-xl" : ""
+              pathname === "/favourites" ? "bg-purple-300 rounded-xl" : ""
             }`}
             onClick={() => router.push("/favourites")}
           >
